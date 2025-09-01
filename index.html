@@ -1,1 +1,695 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TS STGI 1 - Espace Étudiant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --card-bg: #ffffff;
+            --gradient: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7ec 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* Page de connexion */
+        #login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 450px;
+            width: 100%;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.8s ease;
+        }
+        
+        .login-container h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .login-container p {
+            margin-bottom: 25px;
+            color: #666;
+        }
+        
+        .login-container input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #e1e5eb;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .login-container input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        .login-btn {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(67, 97, 238, 0.4);
+        }
+        
+        #error-message {
+            color: var(--accent);
+            margin-top: 15px;
+            display: none;
+            font-weight: 500;
+        }
+        
+        /* Contenu principal */
+        #main-content {
+            display: none;
+        }
+        
+        .header {
+            background: var(--gradient);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-title {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--success);
+            display: inline-block;
+            font-weight: 600;
+        }
+        
+        .section-icon {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .card p {
+            color: #555;
+            margin-bottom: 15px;
+        }
+        
+        .card strong {
+            color: var(--secondary);
+        }
+        
+        .feature-img {
+            width: 100%;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Matières */
+        .semester-title {
+            color: var(--secondary);
+            font-size: 1.5rem;
+            margin: 30px 0 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .semester-title i {
+            margin-right: 10px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.8rem;
+        }
+        
+        .search-container {
+            position: relative;
+            margin: 20px 0;
+        }
+        
+        .search-container input {
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 50px;
+            border: 2px solid #e1e5eb;
+            font-size: 16px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .search-container input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.1);
+        }
+        
+        .search-container i {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+        }
+        
+        .buttons-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .subject-btn {
+            background: white;
+            color: var(--primary);
+            border: 2px solid #e1e5eb;
+            padding: 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .subject-btn i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+        
+        .subject-btn:hover {
+            background: var(--gradient);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.2);
+        }
+        
+        .subject-btn:hover i {
+            color: white;
+        }
+        
+        /* Contact et réseaux sociaux */
+        .social-section {
+            text-align: center;
+            padding: 40px 0;
+        }
+        
+        .social-title {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: var(--secondary);
+        }
+        
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .social-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+        }
+        
+        .social-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .social-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .whatsapp { color: #25D366; }
+        .facebook { color: #3b5998; }
+        .instagram { color: #E1306C; }
+        .tiktok { color: #000000; }
+        .twitter { color: #1DA1F2; }
+        .phone { color: #4361ee; }
+        
+        .social-card h3 {
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .social-card a {
+            color: #666;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .social-card a:hover {
+            color: var(--primary);
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 50px;
+            border-radius: 30px 30px 0 0;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+        
+        .footer-content p {
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+        
+        .footer-content a {
+            color: var(--success);
+            text-decoration: none;
+        }
+        
+        .copyright {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate {
+            animation: fadeIn 0.8s ease forwards;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .buttons-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .social-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .social-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .login-container {
+                padding: 25px;
+            }
+            
+            .header {
+                padding: 20px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Page de connexion -->
+    <div id="login-screen">
+        <div class="login-container">
+            <h2>Accès Réservé</h2>
+            <p>Cet espace est exclusivement réservé aux étudiants de la TS STGI 1.</p>
+            <input type="password" id="access-code" placeholder="Entrez le code d'accès">
+            <button class="login-btn" onclick="checkAccessCode()">
+                <i class="fas fa-lock-open"></i> Accéder à l'espace étudiant
+            </button>
+            <p id="error-message"><i class="fas fa-exclamation-circle"></i> Code incorrect. Veuillez réessayer.</p>
+        </div>
+    </div>
+
+    <!-- Contenu principal -->
+    <div id="main-content">
+        <!-- En-tête -->
+        <div class="header">
+            <div class="header-content">
+                <img src="https://files.catbox.moe/uk5srt.jpeg" alt="Logo TS STGI 1" class="logo">
+                <h1>Espace Étudiant TS STGI 1</h1>
+                <p>Ressources pédagogiques et support pour la réussite académique</p>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- À propos -->
+            <div class="card animate">
+                <h2 class="section-title"><i class="fas fa-info-circle section-icon"></i>À PROPOS</h2>
+                <p>Ce site a été conçu spécialement pour les étudiants de la TS STGI 1. Il regroupe l'ensemble des ressources nécessaires à votre réussite académique.</p>
+            </div>
+
+            <!-- Objectif -->
+            <div class="card animate">
+                <h2 class="section-title"><i class="fas fa-bullseye section-icon"></i>OBJECTIF DU SITE</h2>
+                <p>Nous <strong>(PROMOTION TS STGI 2024-2025)</strong> avons créé cet espace dans l'optique d'aider les étudiants de première année. Une première année n'est jamais facile, et nous souhaitons vous guider dans votre parcours académique.</p>
+            </div>
+
+            <!-- Fonctionnement -->
+            <div class="card animate">
+                <h2 class="section-title"><i class="fas fa-cogs section-icon"></i>FONCTIONNEMENT</h2>
+                <p><strong>📌 PREMIÈREMENT</strong></p>
+                <p>Les matières sont classées par semestre et par ordre alphabétique. Vous pouvez choisir parmi les matières celles qui vous intéressent ou utiliser la barre de recherche.</p>
+
+                <p><strong>📌 DEUXIÈMEMENT</strong></p>
+                <p>Après avoir cliqué sur une matière, vous serez redirigé vers une page dédiée. Vous aurez le choix entre :</p>
+                <ul>
+                    <li>🔥 <strong>LES COURS</strong> (supports de professeurs)</li>
+                    <li>🔥 <strong>LES KPLAs</strong> (Exercices et devoirs corrigés)</li>
+                    <li>🔥 <strong>LES DEUX</strong> (Cours & KPLAs)</li>
+                </ul>
+                
+                <img src="https://files.catbox.moe/7uba04.jpeg" alt="Interface de sélection" class="feature-img">
+                
+                <p><strong>📌 TROISIÈMEMENT</strong></p>
+                <p>Chaque fichier Zip est protégé par un mot de passe spécifique.</p>
+
+                <p><strong>🔥 COMMENT EXTRAIRE UN FICHIER ZIP ?</strong></p>
+                
+                <p><strong>💻 SUR ORDINATEUR : <mark>WINRAR</mark></strong><br>
+                - <a href="https://www.win-rar.com/predownload.html?&L=10" target="_blank">Télécharger WinRAR</a><br>
+                - Tutoriel : <a href="https://youtu.be/wDWc6LkX660?si=goygdE_xIuK1cwrY" target="_blank">cliquez ici</a></p>
+
+                <p><strong>📲 SUR TÉLÉPHONE : <mark>ZARCHIVER</mark></strong><br>
+                - <a href="https://zarchiver.fr.uptodown.com/android/telecharger" target="_blank">Télécharger ZArchiver</a><br>
+                - Tutoriel : <a href="https://youtu.be/SJnqIetyUeo?si=lfrTm30qbB4aqEeu" target="_blank">cliquez ici</a></p>
+
+                <p>Pour <strong>🖲️ IOS</strong>, vous pouvez décompresser en ligne avec <strong><mark>EZYzip</mark></strong><br>
+                - <a href="https://www.ezyzip.com/decompresser-des-fichiers-en-ligne.html" target="_blank">Accéder à EZYzip</a><br>
+                - Tutoriel : <a href="https://youtu.be/8xtn_9ZVO50?si=9KuA4y-hj5J72oOJ" target="_blank">cliquez ici</a></p>
+            </div>
+
+            <img src="https://files.catbox.moe/zu3kik.jpeg" alt="Illustration" class="feature-img">
+
+            <!-- Matières -->
+            <div class="card animate">
+                <h2 class="section-title"><i class="fas fa-book section-icon"></i>MATIÈRES</h2>
+
+                <!-- Premier Semestre -->
+                <h3 class="semester-title"><i class="fas fa-chevron-circle-right"></i>Premier Semestre</h3>
+                <div class="search-container">
+                    <input type="text" id="search-first" onkeyup="searchSubject('first')" placeholder="Rechercher une matière...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="buttons-container first">
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/ALGEBRE/'"><i class="fas fa-square-root-alt"></i> Algèbre</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/ALGO/'"><i class="fas fa-code"></i> Algorithme et programmation</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/ANALYSE/'"><i class="fas fa-calculator"></i> Analyse</button>
+                    <button class="subject-btn" onclick="location.href='math.htmlhttps://lemeciking.github.io/ANGLAIS/'"><i class="fas fa-language"></i> Anglais</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/ARCHI/'"><i class="fas fa-desktop"></i> Architecture des ordinateurs</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/BUREAUTIQUE/'"><i class="fas fa-file-alt"></i> Bureautique et internet</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/CALVECTORIEL/'"><i class="fas fa-vector-square"></i> Calculs vectoriels et torseurs</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/CIRCUITS/'"><i class="fas fa-bolt"></i> Circuits électriques</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/DESSIN/'"><i class="fas fa-drafting-compass"></i> Dessin technique</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/EPS/'"><i class="fas fa-running"></i> Education physique et sportive (E.P.S)</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/COMMANDES/'"><i class="fas fa-microchip"></i> Electronique des commandes</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/MATERIAUX/'"><i class="fas fa-cubes"></i> Matériaux</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/MECAG/'"><i class="fas fa-cogs"></i> Mécanique générale</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/OGE/'"><i class="fas fa-chart-line"></i> Organisation et gestion d'entreprise</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/COMMUNICATION/'"><i class="fas fa-comments"></i> Technique de communication</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/CONSTRUCTION/'"><i class="fas fa-tools"></i> Technologie de construction et conception mécanique</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/THERMODY/'"><i class="fas fa-fire"></i> Thermodynamique appliquée</button>
+                </div>
+
+                <!-- Deuxième Semestre -->
+                <h3 class="semester-title"><i class="fas fa-chevron-circle-right"></i>Deuxième Semestre</h3>
+                <div class="search-container">
+                    <input type="text" id="search-second" onkeyup="searchSubject('second')" placeholder="Rechercher une matière...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="buttons-container second">
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/ANGTECH/'"><i class="fas fa-language"></i> Anglais technique</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/APPAREILLAGE/'"><i class="fas fa-plug"></i> Appareillage et schémas électriques</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/BASEACCES/'"><i class="fas fa-database"></i> Base de données Access</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/COMPTABILITE/'"><i class="fas fa-calculator"></i> Comptabilité générale</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/EDUCATIONPS/'"><i class="fas fa-running"></i> Éducation physique et sportive (E.P.S.)</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/ELECTRONUM/'"><i class="fas fa-microchip"></i> Électronique numérique</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/FABRICATION/'"><i class="fas fa-industry"></i> Fabrication mécanique (métaux en feuille)</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/PRODUCTION/'"><i class="fas fa-boxes"></i> Introduction à la gestion de la production</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/MAINTENANCE/'"><i class="fas fa-tools"></i> Introduction à l'organisation et à la maintenance</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/FLUIDES/'"><i class="fas fa-tint"></i> Mécanique des fluides</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/OUTILS/'"><i class="fas fa-wrench"></i> Outils mathématiques</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/VBA/'"><i class="fas fa-code"></i> Programmation VBA</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/PROJET/'"><i class="fas fa-project-diagram"></i> Projet découverte 2</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/REDRESSEURS/'"><i class="fas fa-bolt"></i> Redresseurs et onduleurs</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/RESISTANCES/'"><i class="fas fa-weight-hanging"></i> Résistance des matériaux</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/ENERGIES/'"><i class="fas fa-solar-panel"></i> Technologie des énergies renouvelables</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/THERMIQUE/'"><i class="fas fa-thermometer-half"></i> Transfert thermique</button>
+                    <button class="subject-btn" onclick="location.href='https://lemeciking.github.io/TRANSFORMATION/'"><i class="fas fa-bolt"></i> Transformateur et actionneurs électriques</button>
+                </div>
+            </div>
+
+            <!-- Contacts -->
+            <div class="social-section">
+                <h2 class="social-title">Nos Réseaux Sociaux</h2>
+                <div class="social-grid">
+                    <div class="social-card">
+                        <i class="fab fa-whatsapp social-icon whatsapp"></i>
+                        <h3>WhatsApp</h3>
+                        <a href="https://whatsapp.com/channel/0029Vb5ilsPEKyZP72vHJ333" target="_blank">CLIQUEZ ICI !</a>
+                    </div>
+                    <div class="social-card">
+                        <i class="fab fa-facebook social-icon facebook"></i>
+                        <h3>Facebook</h3>
+                        <a href="https://www.facebook.com/share/15qAJnBHrW/" target="_blank">CLIQUEZ ICI !</a>
+                    </div>
+                    <div class="social-card">
+                        <i class="fab fa-instagram social-icon instagram"></i>
+                        <h3>Instagram</h3>
+                        <a href="https://www.instagram.com/stgi_inphb?igsh=aDZ3MTRyYXV4aGlq" target="_blank">CLIQUEZ ICI !</a>
+                    </div>
+                    <div class="social-card">
+                        <i class="fab fa-tiktok social-icon tiktok"></i>
+                        <h3>TikTok</h3>
+                        <a href="https://www.tiktok.com/@stgi_inphb?_t=ZM-8zNCABgHtsG&_r=1" target="_blank">CLIQUEZ ICI !</a>
+                    </div>
+                    
+                    <div class="social-card">
+                        <i class="fas fa-phone social-icon phone"></i>
+                        <h3>Téléphone</h3>
+                        <a href="tel:+2250102582123">+225 01 0258 2123</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <p>© 2025 <strong>TS STGI 1</strong>. Tous droits réservés.</p>
+                <p>🔖 Licence : <strong>TS STGI 1</strong> est sous licence <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></p>
+                
+                <div class="copyright">
+                    <p>Éditeur : 👻L͜͡E͜͡M͜͡E͜͡C͜͡I•̀ᴗ•́O͜͡F͜͡F👻 | <a href="mailto:yoannking1@gmail.com">yoannking1@gmail.com</a></p>
+                    <p>Hébergé sur GitHub Pages</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Fonction pour vérifier le code d'accès
+        function checkAccessCode() {
+            // Remplacez "VOTRE_CODE" par le code d'accès que vous souhaitez utiliser
+            const correctCode = "Lemeci20@";
+            const enteredCode = document.getElementById("access-code").value;
+            
+            if (enteredCode === correctCode) {
+                // Code correct - afficher le contenu et masquer l'écran de connexion
+                document.getElementById("login-screen").style.display = "none";
+                document.getElementById("main-content").style.display = "block";
+                
+                // Stocker l'accès dans le localStorage pour ne pas redemander le code
+                localStorage.setItem("siteAccessGranted", "true");
+            } else {
+                // Code incorrect - afficher un message d'erreur
+                document.getElementById("error-message").style.display = "block";
+                
+                // Cacher le message après 3 secondes
+                setTimeout(() => {
+                    document.getElementById("error-message").style.display = "none";
+                }, 3000);
+            }
+        }
+        
+        // Vérifier si l'accès a déjà été accordé
+        window.onload = function() {
+            if (localStorage.getItem("siteAccessGranted") === "true") {
+                document.getElementById("login-screen").style.display = "none";
+                document.getElementById("main-content").style.display = "block";
+            }
+            
+            // Permettre de soumettre le formulaire avec la touche Entrée
+            document.getElementById("access-code").addEventListener("keypress", function(event) {
+                if (event.key === "Enter") {
+                    checkAccessCode();
+                }
+            });
+            
+            // Animation des éléments au défilement
+            const animatedElements = document.querySelectorAll('.animate');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            animatedElements.forEach(element => {
+                element.style.opacity = 0;
+                element.style.transform = 'translateY(20px)';
+                element.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                observer.observe(element);
+            });
+        }
+        
+        // Fonction de recherche existante
+        function searchSubject(semester) {
+            let input = document.getElementById("search-" + semester).value.toLowerCase();
+            let buttons = document.querySelectorAll("." + semester + " .subject-btn");
+
+            buttons.forEach(btn => {
+                if (btn.innerText.toLowerCase().includes(input)) {
+                    btn.style.display = "flex";
+                } else {
+                    btn.style.display = "none";
+                }
+            });
+        }
+    </script>
+</body>
+</html
 
